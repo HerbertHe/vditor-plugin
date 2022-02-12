@@ -2,9 +2,15 @@
   "name": "vditor-plugin",
   "version": "0.0.1",
   "description": "Vditor Plugin Helper for Vditor Plugin Development!",
-  "main": "index.mjs",
+  "main": "dist/index.mjs",
   "type": "module",
-  "module": "indedx.mjs",
+  "module": "dist/index.mjs",
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md",
+    "README.en_US.md"
+  ],
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup"
