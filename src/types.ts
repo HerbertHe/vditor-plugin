@@ -106,10 +106,14 @@ export type IVditorPluginStyles = Map<string, string>
 
 /**
  * Vditor Plugin Interface
+ * @param id
+ * @param compatible
+ * @param renderers
+ * @param styles
  */
 export interface IVditorPlugin {
     id: string
-    compatible?: string
+    compatible: string
     renderers?: IVditorPluginRenderers
     styles?: IVditorPluginStyles
 }
