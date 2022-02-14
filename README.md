@@ -1,5 +1,8 @@
 # vditor-plugin
 
+[![version](https://img.shields.io/npm/v/vditor-plugin.svg)](https://www.npmjs.com/package/vditor-plugin)
+[![download](https://img.shields.io/npm/dm/vditor-plugin.svg)](https://www.npmjs.com/package/vditor-plugin)
+
 Vditor plugin helper for Vditor Plugin Development!
 
 [简体中文](./README.zh_CN.md) | [English](./README.md)
