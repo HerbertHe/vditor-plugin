@@ -53,59 +53,63 @@ function VersionNumberComparison(
 export const checkVditorPluginCompatible = (
     compatible: string,
     vditor_version: string
-): [boolean, string] => {
+): [boolean, string, string] => {
     // Replace All Spaces
     compatible = compatible.replace(/ /g, "")
 
     // Check Vditor Version
     const ValidVersionRegExp = /^([0-9]+)\.([0-9]+)\.([0-9]+)$/
     if (!ValidVersionRegExp.test(vditor_version)) {
-        throw new Error("Invalid Vditor Vesion!")
+        throw new Error("Invalid Vditor Version!")
     }
 
     // Check if compatible == "*""
     if (compatible === "*") {
-        return [true, compatible]
+        return [true, compatible, vditor_version]
     }
 
-    const VersionRegExp =
-        /(([>|<|=]+)?([0-9]+)\.([0-9]+)\.([0-9]+))(([\-])?(([>|<|=]+)?([0-9]+)\.([0-9]+)\.([0-9]+)))?/
+    /**
+     * Check if the format of `compatible` as followed:
+     * - "version"
+     * - ">version"
+     * - "<version"
+     * - ">=version"
+     * - "<=version"
+     */
+    const SingleVersionRegExp = /^([>|<|=]+)?([0-9]+)\.([0-9]+)\.([0-9]+)$/
+
+    /**
+     * Check if the format of `compatible` as followed:
+     * - "version1-version2"
+     */
+    const MultiVersionRegExp =
+        /^([0-9]+)\.([0-9]+)\.([0-9]+)(\-)([0-9]+)\.([0-9]+)\.([0-9]+)$/
 
     // Check compatible format
-    if (!VersionRegExp.test(compatible)) {
-        return [false, compatible]
+    if (
+        !SingleVersionRegExp.test(compatible) &&
+        !MultiVersionRegExp.test(compatible)
+    ) {
+        return [false, compatible, vditor_version]
     }
 
-    // Get values
-    const [
-        raw,
-        basic_raw,
-        basic_comparison_symbol,
-        b1,
-        b2,
-        b3,
-        second_exist,
-        connect,
-        second_raw,
-        second_comparison_symbol,
-        s1,
-        s2,
-        s3,
-    ] = VersionRegExp.exec(compatible)
-
-    if (!second_exist) {
+    if (!MultiVersionRegExp.test(compatible)) {
+        const [basic_raw, basic_comparison_symbol, b1, b2, b3] =
+            SingleVersionRegExp.exec(compatible)
         // Check when single
         if (!!basic_comparison_symbol) {
+            let _ans: [boolean, string, string] = [false, compatible, vditor_version]
             switch (basic_comparison_symbol) {
                 case ">": {
                     if (
                         VersionNumberComparison(
                             [b1, b2, b3],
                             vditor_version
-                        )[0] === ">"
+                        ) === ">"
                     ) {
-                        return [true, compatible]
+                        _ans = [true, compatible, vditor_version]
                     }
+                    break
                 }
                 case ">=": {
                     if (
@@ -113,21 +117,23 @@ export const checkVditorPluginCompatible = (
                             VersionNumberComparison(
                                 [b1, b2, b3],
                                 vditor_version
-                            )[0]
+                            )
                         )
                     ) {
-                        return [true, compatible]
+                        _ans = [true, compatible, vditor_version]
                     }
+                    break
                 }
                 case "<": {
                     if (
                         VersionNumberComparison(
                             [b1, b2, b3],
                             vditor_version
-                        )[0] === "<"
+                        ) === "<"
                     ) {
-                        return [true, compatible]
+                        _ans = [true, compatible, vditor_version]
                     }
+                    break
                 }
                 case "<=": {
                     if (
@@ -135,23 +141,42 @@ export const checkVditorPluginCompatible = (
                             VersionNumberComparison(
                                 [b1, b2, b3],
                                 vditor_version
-                            )[0]
+                            )
                         )
                     ) {
-                        return [true, compatible]
+                        _ans = [true, compatible, vditor_version]
                     }
+                    break
                 }
             }
 
-            return [false, compatible]
+            return _ans
         } else {
             if (basic_raw === vditor_version) {
-                return [true, compatible]
+                return [true, compatible, vditor_version]
             } else {
-                return [false, compatible]
+                return [false, compatible, vditor_version]
             }
         }
     } else {
-        // TODO
+        // Only Support version1-version2 format
+        const [s_raw, b1, b2, b3, connect, s1, s2, s3] =
+            MultiVersionRegExp.exec(compatible)
+        if (connect === "-") {
+            if (
+                [">", "="].includes(
+                    VersionNumberComparison([b1, b2, b3], vditor_version)
+                ) &&
+                ["<", "="].includes(
+                    VersionNumberComparison([s1, s2, s3], vditor_version)
+                )
+            ) {
+                return [true, compatible, vditor_version]
+            } else {
+                return [false, compatible, vditor_version]
+            }
+        } else {
+            return [false, compatible, vditor_version]
+        }
     }
 }
