@@ -19,12 +19,12 @@ export default defineVditorPlugin({
 
 Arguments of `defineVditorPlugin` API:
 
-| Argument   | Required | Type                              | Description                   |
-| ---------- | :------: | --------------------------------- | ----------------------------- |
-| id         |    √     | `/vditor-plugin-([a-z0-9]+)/`     | Unique identifier of plugin   |
-| compatible |    √     | [CompatibleType](#CompatibleType) | Compatible Version for Vditor |
-| renderers  |    ×     |                                   |                               |
-| styles     |    ×     |                                   |                               |
+| Argument   | Required | Type                              | Description                  |
+| ---------- | :------: | --------------------------------- | ---------------------------- |
+| id         |    √     | `/vditor-plugin-([a-z0-9]+)/`     | Unique identifier of plugin  |
+| compatible |    √     | [CompatibleType](#CompatibleType) | Compatible version of Vditor |
+| renderers  |    ×     |                                   |                              |
+| styles     |    ×     |                                   |                              |
 
 #### CompatibleType
 
