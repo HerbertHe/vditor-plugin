@@ -26,7 +26,7 @@ export default defineVditorPlugin({
 
 | 参数       | 必需  | 类型                                          | 参数说明                                 |
 | ---------- | :---: | --------------------------------------------- | ---------------------------------------- |
-| id         |   √   | `/vditor\-plugin\-([a-z0-9]+)/`               | 插件的唯一标识符 (与 npm 的报名保持一致) |
+| id         |   √   | `/vditor\-plugin\-([a-z0-9]+)/`               | 插件的唯一标识符 (与 npm 的包名保持一致) |
 | compatible |   √   | [CompatibleType](#CompatibleType)             | 兼容 Vditor 的版本范围                   |
 | renderers  |   ×   | `Map<keyof ILuteRender, ILuteRenderCallback>` | 自定义 Vditor 渲染器                     |
 | styles     |   ×   | `Map<string, string>` (样式表标识符，链接)    | 自定义 Vditor 样式表                     |
