@@ -2,9 +2,9 @@
   "name": "vditor-plugin",
   "version": "0.0.1",
   "description": "Vditor Plugin Helper for Vditor Plugin Development!",
-  "main": "dist/index.mjs",
-  "type": "module",
+  "main": "dist/index.js",
   "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "files": [
     "dist",
     "LICENSE",
