@@ -1,6 +1,6 @@
 {
   "name": "vditor-plugin",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Vditor Plugin Helper for Vditor Plugin Development!",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -9,7 +9,7 @@
     "dist",
     "LICENSE",
     "README.md",
-    "README.en_US.md"
+    "README.zh_CN.md"
   ],
   "scripts": {
     "dev": "tsup --watch",

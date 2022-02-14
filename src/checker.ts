@@ -98,7 +98,11 @@ export const checkVditorPluginCompatible = (
             SingleVersionRegExp.exec(compatible)
         // Check when single
         if (!!basic_comparison_symbol) {
-            let _ans: [boolean, string, string] = [false, compatible, vditor_version]
+            let _ans: [boolean, string, string] = [
+                false,
+                compatible,
+                vditor_version,
+            ]
             switch (basic_comparison_symbol) {
                 case ">": {
                     if (
@@ -179,4 +183,19 @@ export const checkVditorPluginCompatible = (
             return [false, compatible, vditor_version]
         }
     }
+}
+
+export const VditorPluginIdentifierRegExp = /^vditor\-plugin\-([a-z0-9]+)$/
+
+/**
+ * Vditor Plugin Identifier Checker
+ * @param {string} id plugin identifier
+ * @returns
+ */
+export const checkVditorPluginIdentifier = (id: string) => {
+    if (!VditorPluginIdentifierRegExp.test(id)) {
+        return [false, id]
+    }
+
+    return [true, id]
 }

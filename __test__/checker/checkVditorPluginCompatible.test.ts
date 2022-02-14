@@ -13,7 +13,6 @@ test("should be compatible!", () => {
 })
 
 test("should not be compatible!", () => {
-    console.log(checkVditorPluginCompatible(">1.3.1", "1.3.1"))
     expect(checkVditorPluginCompatible(">1.3.1", "1.3.1")[0]).toBe(false)
 })
 
