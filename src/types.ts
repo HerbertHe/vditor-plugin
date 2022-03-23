@@ -20,16 +20,17 @@ interface ILuteNode {
 export enum WalkStatus {
     WalkStop = 0,
     WalkSkipChildren = 1,
-    WalkContinue = 2
+    WalkContinue = 2,
 }
 
-type ILuteRenderCallback = (
-    node: ILuteNode,
-    entering: boolean
-) => [string, WalkStatus]
+interface ILuteRenderCallback {
+    (node: ILuteNode, entering: boolean): [string, WalkStatus]
+}
 
 /** @link https://ld246.com/article/1588412297062 */
-interface ILuteRender {
+export interface ILuteRender {
+    [K: string]: ILuteRenderCallback
+
     renderDocument?: ILuteRenderCallback
     renderParagraph?: ILuteRenderCallback
     renderText?: ILuteRenderCallback
@@ -106,12 +107,48 @@ interface ILuteRender {
 /**
  * Vditor Plugin Renderers Type
  */
-export type IVditorPluginRenderers = Map<keyof ILuteRender, ILuteRenderCallback>
+export type VditorPluginRenderersType = Map<
+    keyof ILuteRender,
+    ILuteRenderCallback
+>
 
 /**
  * Vditor Plugin Styles Type
  */
-export type IVditorPluginStyles = Map<string, string>
+export type VditorPluginStylesType = Map<string, string>
+
+export interface IStringObject {
+    [K: string]: string
+}
+
+/**
+ * Vditor Plugin Options Type
+ */
+export type VditorPluginOptionsType<
+    T extends string | number | symbol = string,
+    V = string | number | symbol
+> = {
+    [K in T]: V
+}
+
+/**
+ * Vditor Plugin Feature Type
+ */
+export interface VditorPluginFeatureFunc {
+    (element?: HTMLElement, options?: VditorPluginOptionsType): void
+}
+
+/**
+ * Vditor Plugin Feature Interface
+ */
+export interface IVditorPluginFeature {
+    [K: string]: VditorPluginFeatureFunc
+}
+
+/**
+ * Vditor Plugin Features Type
+ */
+export type VditorPluginFeaturesType = Map<string, VditorPluginFeatureFunc>
 
 /**
  * Vditor Plugin Interface
@@ -121,11 +158,13 @@ export type IVditorPluginStyles = Map<string, string>
  * @param styles
  */
 export interface IVditorPlugin {
-    // TODO features, drawer
+    // TODO drawer
     id: string
     compatible: string
-    renderers?: IVditorPluginRenderers
-    styles?: IVditorPluginStyles
+    options?: VditorPluginOptionsType
+    renderers?: VditorPluginRenderersType
+    features?: VditorPluginFeaturesType
+    styles?: VditorPluginStylesType
 }
 
 export type VditorPluginsType = Map<string, IVditorPlugin>

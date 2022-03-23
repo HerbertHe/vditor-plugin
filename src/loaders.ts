@@ -1,20 +1,30 @@
 import type {
-    IVditorPluginRenderers,
-    IVditorPluginStyles,
+    VditorPluginFeaturesType,
+    VditorPluginRenderersType,
+    VditorPluginStylesType,
     VditorPluginsType,
 } from "./types"
 
-export const loadVditorPlugins = (plugins: VditorPluginsType): IVditorPluginRenderers => {
+/**
+ * Load Plugins for Vditor
+ * @param plugins
+ * @returns
+ */
+export const loadVditorPlugins = (
+    plugins: VditorPluginsType
+) => {
     if (plugins.size === 0) {
         return
     }
 
-    let vditorPluginStyles: IVditorPluginStyles = new Map<string, string>()
-    let vditorPluginRenderers: IVditorPluginRenderers =
-        new Map() as IVditorPluginRenderers
+    let vditorPluginStyles: VditorPluginStylesType = new Map<string, string>()
+    let vditorPluginRenderers: VditorPluginRenderersType =
+        new Map() as VditorPluginRenderersType
+    let vditorPluginFeatures: VditorPluginFeaturesType =
+        new Map() as VditorPluginFeaturesType
 
     for (let id of plugins.keys()) {
-        const { renderers, styles } = plugins.get(id)
+        const { renderers, features ,styles } = plugins.get(id)
         // Set Styles
         if (!!styles && styles.size !== 0) {
             ;[...styles].forEach(([styleID, styleUrl]) => {
@@ -33,11 +43,24 @@ export const loadVditorPlugins = (plugins: VditorPluginsType): IVditorPluginRend
                 }
             })
         }
+
+        // Set Features
+        if (!!features && features.size !== 0) {
+            // TODO 可能的 features 冲突, 对用户进行友好提示
+            ;[...features].forEach(([key, fn]) => {
+                if (!!key && !!fn) {
+                    vditorPluginFeatures.set(key, fn)
+                }
+            })
+        }
     }
 
-    loadVditorPluginsStyle(vditorPluginStyles)
+    // loadVditorPluginsStyle(vditorPluginStyles)
 
-    return vditorPluginRenderers
+    return {
+        renderers: vditorPluginRenderers,
+        features: vditorPluginFeatures
+    }
 }
 
 /**
@@ -45,7 +68,7 @@ export const loadVditorPlugins = (plugins: VditorPluginsType): IVditorPluginRend
  * @param styles
  * @returns
  */
-const loadVditorPluginsStyle = (styles: IVditorPluginStyles) => {
+const loadVditorPluginsStyle = (styles: VditorPluginStylesType) => {
     // id : url
     if (!styles || styles.size === 0) {
         return
