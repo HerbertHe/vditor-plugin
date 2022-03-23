@@ -14,10 +14,19 @@ interface ILuteNode {
     }
 }
 
+/**
+ * Lute Node Walk Status
+ */
+export enum WalkStatus {
+    WalkStop = 0,
+    WalkSkipChildren = 1,
+    WalkContinue = 2
+}
+
 type ILuteRenderCallback = (
     node: ILuteNode,
     entering: boolean
-) => [string, number]
+) => [string, WalkStatus]
 
 /** @link https://ld246.com/article/1588412297062 */
 interface ILuteRender {
@@ -112,8 +121,11 @@ export type IVditorPluginStyles = Map<string, string>
  * @param styles
  */
 export interface IVditorPlugin {
+    // TODO features, drawer
     id: string
     compatible: string
     renderers?: IVditorPluginRenderers
     styles?: IVditorPluginStyles
 }
+
+export type VditorPluginsType = Map<string, IVditorPlugin>
