@@ -1,24 +1,28 @@
-import type { IVditorPlugin } from "../types"
+import type { IVditor, IVditorPlugin, IWindow } from "../types"
 
 /**
  * Vditor Use hook
  * @param plugins
  * @returns
  */
-export const VditorUse = (
+export function VditorUse(
+    this: IVditor,
     plugins: string | IVditorPlugin | Array<string> | Array<IVditorPlugin>
-) => {
+) {
     if (!!plugins) {
         return
     }
 
     if (typeof plugins === "string") {
         // TODO handle single `iife` plugin
-        // loader from CDN, need the plugin was built as iife format
+        // preload from CDN, need the plugin was built as iife format windows.__vditor_plugins__.<plugin-id>
+        this._vditor_plugins_preload_queue.add(plugins)
+        // TODO register to Vditor instance after loaded
     }
 
     if (typeof plugins === "object" && !Array.isArray(plugins)) {
-        // TODO handle single `esm` plugin
+        // register plugins to Vditor instance
+        this._vditor_plugins.add(plugins)
     }
 
     if (Array.isArray(plugins)) {
@@ -28,10 +32,18 @@ export const VditorUse = (
 
         if (typeof plugins[0] === "string") {
             // TODO handle `iife` plugins
+            this._vditor_plugins_preload_queue = new Set([
+                ...this._vditor_plugins_preload_queue,
+                ...(<Array<string>>plugins),
+            ])
+            // TODO register to Vditor instance after loaded
         }
 
         if (typeof plugins[0] === "object" && !Array.isArray(plugins[0])) {
-            // TODO handle `esm` plugins
+            this._vditor_plugins = new Set([
+                ...this._vditor_plugins,
+                ...(<Array<IVditorPlugin>>plugins),
+            ])
         }
     }
 }
