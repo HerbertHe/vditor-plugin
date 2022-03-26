@@ -1,18 +1,18 @@
 import type {
+    IWindow,
     VditorPluginFeaturesType,
     VditorPluginRenderersType,
     VditorPluginStylesType,
     VditorPluginsType,
 } from "./types"
+import { convertPluginNameToBrowserFormat } from "./utils"
 
 /**
  * Load Plugins for Vditor
  * @param plugins
  * @returns
  */
-export const loadVditorPlugins = (
-    plugins: VditorPluginsType
-) => {
+export const loadVditorPlugins = (plugins: VditorPluginsType) => {
     if (plugins.size === 0) {
         return
     }
@@ -24,7 +24,7 @@ export const loadVditorPlugins = (
         new Map() as VditorPluginFeaturesType
 
     for (let id of plugins.keys()) {
-        const { renderers, features ,styles } = plugins.get(id)
+        const { renderers, features, styles } = plugins.get(id)
         // Set Styles
         if (!!styles && styles.size !== 0) {
             ;[...styles].forEach(([styleID, styleUrl]) => {
@@ -59,7 +59,7 @@ export const loadVditorPlugins = (
 
     return {
         renderers: vditorPluginRenderers,
-        features: vditorPluginFeatures
+        features: vditorPluginFeatures,
     }
 }
 
@@ -87,4 +87,40 @@ const loadVditorPluginsStyle = (styles: VditorPluginStylesType) => {
     styleLinks.forEach((item) => {
         head.appendChild(item)
     })
+}
+
+/**
+ * preload Vditor Plugins from remote
+ * @param plugins
+ */
+export const preloadVditorPluginsFromRemote = (plugins: Array<string>) => {
+    return Promise.allSettled(
+        plugins
+            .map((plugin: string) => {
+                const pl = <IWindow>(
+                    window[convertPluginNameToBrowserFormat(plugin)]
+                )
+                if (!!pl) {
+                    return
+                }
+
+                return new Promise((resolve, reject) => {
+                    const script = document.createElement("script")
+                    // TODO jsDelivr
+                    script.src = ``
+                    script.onload = () => {
+                        const pl = <IWindow>(
+                            window[convertPluginNameToBrowserFormat(plugin)]
+                        )
+                        if (!!pl) {
+                            ;(<IWindow>window).__vditor_plugins__[plugin] = pl
+                            resolve([true, plugin])
+                        } else {
+                            reject([false, plugin])
+                        }
+                    }
+                })
+            })
+            .filter((item) => !!item)
+    )
 }

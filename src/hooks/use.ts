@@ -15,7 +15,7 @@ export function VditorUse(
 
     if (typeof plugins === "string") {
         // TODO handle single `iife` plugin
-        // preload from CDN, need the plugin was built as iife format windows.__vditor_plugins__.<plugin-id>
+        // preload from jsDelivr CDN, need the plugin was built as iife format windows.__vditor_plugins__.<plugin-id>
         this._vditor_plugins_preload_queue.add(plugins)
         // TODO register to Vditor instance after loaded
     }
