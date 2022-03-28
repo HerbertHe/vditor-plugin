@@ -1,2 +1,2 @@
 export const convertPluginNameToBrowserFormat = (pn: string) =>
-    `__${pn.replace(/-/, "_")}__`
+    `__${pn.replace(/\-/g, "_")}__`
