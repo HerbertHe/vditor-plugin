@@ -55,11 +55,10 @@ export const loadVditorPlugins = (plugins: VditorPluginsType) => {
         }
     }
 
-    // loadVditorPluginsStyle(vditorPluginStyles)
-
     return {
         renderers: vditorPluginRenderers,
         features: vditorPluginFeatures,
+        styles: vditorPluginStyles
     }
 }
 
@@ -68,7 +67,7 @@ export const loadVditorPlugins = (plugins: VditorPluginsType) => {
  * @param styles
  * @returns
  */
-const loadVditorPluginsStyle = (styles: VditorPluginStylesType) => {
+export const loadVditorPluginsStyle = (styles: VditorPluginStylesType) => {
     // id : url
     if (!styles || styles.size === 0) {
         return
@@ -77,11 +76,17 @@ const loadVditorPluginsStyle = (styles: VditorPluginStylesType) => {
     const head = document.head
     let styleLinks: Array<HTMLLinkElement> = []
     for (let id of styles.keys()) {
+        const href = styles.get(id)
+        if (!href) {
+            continue
+        }
+
         const link = document.createElement("link") as HTMLLinkElement
         link.type = "text/css"
         link.rel = "stylesheet"
         link.id = id
-        link.href = styles.get(id)
+        link.href = href
+        styleLinks.push(link)
     }
 
     styleLinks.forEach((item) => {
@@ -113,7 +118,7 @@ export const preloadVditorPluginsFromRemote = (plugins: Array<string>) => {
                             window[convertPluginNameToBrowserFormat(plugin)]
                         )
                         if (!!pl) {
-                            ;(<IWindow>window).__vditor_plugins__[plugin] = pl
+                            ; (<IWindow>window).__vditor_plugins__[plugin] = pl
                             resolve([true, plugin])
                         } else {
                             reject([false, plugin])

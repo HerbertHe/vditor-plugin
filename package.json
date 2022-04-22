@@ -1,6 +1,6 @@
 {
   "name": "vditor-plugin",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Vditor Plugin Helper for Vditor Plugin Development!",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
