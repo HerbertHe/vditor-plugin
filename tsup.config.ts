@@ -1,7 +1,10 @@
 import { defineConfig } from "tsup"
 
 export const tsup = defineConfig({
-    entry: ["src/index.ts"],
+    entry: {
+        "index": "src/index.ts",
+        "types": "src/types/index.ts",
+    },
     clean: true,
     format: ["esm", "cjs"],
     dts: true,

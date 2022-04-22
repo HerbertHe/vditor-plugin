@@ -1,5 +1,5 @@
 export * from "./checker"
 export * from "./helper"
-export * from "./types"
 export * from "./loaders"
-export * from "./hooks"
+export * from "./hooks/index"
+export { version } from "../package.json"
